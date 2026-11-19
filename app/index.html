@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="LEONIDA LEDGER v3 — an offline GTA VI trophy guide and tracker for all 55 PlayStation 5 trophies, with cited guides, a roadmap to the platinum and a checklist saved in your browser.">
+<title>LEONIDA LEDGER v3 — GTA VI Trophy Guide &amp; Tracker</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<noscript><p style="padding:16px 20px">This guide needs JavaScript: the checklist, filters and tracker all run in your browser, offline.</p></noscript>
+<header class="top">
+  <div class="title-block">
+    <h1>LEONIDA LEDGER <span class="v3">v3</span></h1>
+    <p class="subtitle">GTA VI Trophy Guide &amp; Tracker · 55 trophies · offline</p>
+  </div>
+  <div class="head-stats">
+    <p class="earned-line"><strong id="earnedCount">0/55</strong> <span id="earnedPct">(0%)</span></p>
+    <p class="grade-line" id="gradeCounts">P 0/1 · G 0/2 · S 0/6 · B 0/46</p>
+    <p class="psn-line"><span id="psnPoints">0/1350 PSN pts</span> · <span id="inProgress">0 in progress</span></p>
+    <p class="saved-line" id="savedStamp">Saved in this browser —</p>
+  </div>
+  <div class="head-actions">
+    <button id="themeToggle" type="button" aria-label="Toggle theme">Theme: light</button>
+    <button id="spoilerToggle" type="button" aria-label="Toggle spoilers">Spoilers: hidden</button>
+    <button id="exportBtn" type="button">Export</button>
+    <button id="importBtn" type="button">Import</button>
+    <button id="resetBtn" type="button">Reset</button>
+    <input id="importFile" type="file" accept="application/json" hidden>
+  </div>
+</header>
+
+<div id="missableBanner" class="banner" hidden>
+  <strong>POSSIBLY MISSABLE</strong>
+  <span id="missableText"></span>
+  <button id="missableShow" type="button">Show it</button>
+</div>
+
+<div class="audit" id="auditStrip" aria-live="polite"></div>
+<div class="audit cited" id="citedByStrip" aria-live="polite"></div>
+
+<nav class="tabs" role="tablist" aria-label="Guide sections">
+  <button class="tab-btn active" data-tab="checklist" type="button" role="tab">Checklist</button>
+  <button class="tab-btn" data-tab="roadmap" type="button" role="tab">Roadmap</button>
+  <button class="tab-btn" data-tab="matrix" type="button" role="tab">Source matrix</button>
+  <button class="tab-btn" data-tab="missables" type="button" role="tab">Missables &amp; watch</button>
+  <button class="tab-btn" data-tab="nextup" type="button" role="tab">Next up</button>
+  <button class="tab-btn" data-tab="progress" type="button" role="tab">Progress</button>
+</nav>
+
+<main>
+  <section id="tab-checklist" class="tab-panel active" role="tabpanel">
+    <div class="check-layout">
+      <div class="check-main">
+        <div class="filters" id="filters"></div>
+        <div class="controls-row">
+          <label>Grade
+            <select id="gradeFilter">
+              <option value="all">All grades</option>
+              <option value="platinum">Platinum</option>
+              <option value="gold">Gold</option>
+              <option value="silver">Silver</option>
+              <option value="bronze">Bronze</option>
+            </select>
+          </label>
+          <label>Sort
+            <select id="sortSelect">
+              <option value="roadmap">Roadmap</option>
+              <option value="grade">Grade</option>
+              <option value="az">A–Z</option>
+              <option value="difficulty">Difficulty</option>
+            </select>
+          </label>
+          <label class="search-label">Search
+            <input id="searchInput" type="search" placeholder="Search trophies…" autocomplete="off">
+          </label>
+          <span id="resultCount" class="result-count"></span>
+        </div>
+        <p id="showingLine" class="showing"></p>
+        <div id="checklist" class="checklist"></div>
+      </div>
+      <aside class="side" aria-label="Next up">
+        <h2>NEXT UP</h2>
+        <p class="side-note">Missable risk first, then roadmap order, then shortest time. Recomputes as you earn trophies.</p>
+        <ol id="nextupSide" class="nextup-list"></ol>
+      </aside>
+    </div>
+  </section>
+
+  <section id="tab-roadmap" class="tab-panel" role="tabpanel">
+    <h2>Roadmap to platinum</h2>
+    <p class="section-note">Stages S0–S7 in order. The platinum goal sits at the top; the free-roam grind sits after the story.</p>
+    <div id="roadmap"></div>
+  </section>
+
+  <section id="tab-matrix" class="tab-panel" role="tabpanel">
+    <h2>Source matrix</h2>
+    <p class="section-note">Every number below is computed live from trophies.json. A guide counts as citing a source when its text draws on that source; a step counts only when it cites a full method (M). Thin requirement notes (T) support the requirement, never a method step. List-only sources (L) support name, description, grade and counters only.</p>
+    <p id="confidenceLegend" class="legend"></p>
+    <div class="table-wrap"><table id="matrixTable" class="matrix">
+      <thead><tr><th>#</th><th>Source</th><th>Read</th><th>Guides citing it</th><th>Steps citing it</th><th>What it supports</th><th>Kind</th></tr></thead>
+      <tbody></tbody>
+    </table></div>
+    <h3>Sources</h3>
+    <ol id="sourceList" class="source-list"></ol>
+  </section>
+
+  <section id="tab-missables" class="tab-panel" role="tabpanel">
+    <h2>Missables &amp; watch</h2>
+    <div id="missablesList"></div>
+    <h3>Source disagreements (9 live)</h3>
+    <p class="section-note">Every live disagreement, both versions shown. D1 (meditation 18 vs 15) is resolved, not a conflict: 18 is the trophy, 15 is the 100% checklist threshold.</p>
+    <div id="disagreeList"></div>
+  </section>
+
+  <section id="tab-nextup" class="tab-panel" role="tabpanel">
+    <h2>Next up</h2>
+    <p class="section-note">Computed from your progress: missable risk first, then roadmap order, then shortest time. Click a row to open its guide.</p>
+    <ol id="nextupList" class="nextup-list full"></ol>
+  </section>
+
+  <section id="tab-progress" class="tab-panel" role="tabpanel">
+    <h2>Progress</h2>
+    <div id="progressView"></div>
+  </section>
+</main>
+
+<div id="detailOverlay" class="overlay" hidden>
+  <div class="detail" id="detail" role="dialog" aria-modal="true" aria-label="Trophy detail"></div>
+</div>
+
+<footer class="foot">
+  <p>Unofficial fan guide. GTA VI and PlayStation are trademarks of their owners; this guide is not affiliated with Rockstar Games or Sony. All guide text is our own wording, cited to the sources listed. Read 20 Nov 2026. Works offline — 0 external requests.</p>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
